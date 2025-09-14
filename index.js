@@ -1,4 +1,3 @@
-
 const quiz = [
     {
         question: "What is your name ?",
@@ -53,52 +52,61 @@ const quiz = [
     
 ]
 
-var currentQuestion = 0
-var score = 0
-var correctCount = 0 //
-var wrongCount = 0 //
-var scoreElement = document.getElementById("score")
-
+var currentQuestion = 0;
+var score = 0;
+var correctCount = 0   
+var wrongCount = 0     
+var scoreElement = document.getElementById("score");
+var quizOptions = document.getElementById("quizOption");
+let currentSelection = null;
+let nextQuestionButton = document.getElementById("next");
 function renderQuestions(){
-    if(currentQuestion >=quiz.length){  //
-        showFinalResult()           //
-        return              //
-    }                        //
-    var questionElement = document.getElementById("question")
-    questionElement.innerHTML = quiz[currentQuestion].question
-    
-    var quizOptions = document.getElementById("quizOption")
-    
+    var questionElement = document.getElementById("question");
+    questionElement.innerHTML = quiz[currentQuestion].question;
+
     quizOptions.innerHTML = ''
     for(var i = 0; i < quiz[currentQuestion].options.length ; i++){
-        quizOptions.innerHTML += `<li onclick="checkCorrect(event)" style="padding-bottom: 20px">${quiz[currentQuestion].options[i]}</li>`
-    }
+        quizOptions.innerHTML += `<li class = "non-active" onclick="checkCorrect(event)" style="padding-bottom: 20px">${quiz[currentQuestion].options[i]}</li>`
+    }  
 }
 
 
 function goToNext(){
-    currentQuestion++
-    // if(currentQuestion >= quiz.length){
-    //     var changeButton =document.getElementById("next")
-    //     changeButton.innerHTML = "Check Result"
-    // }
-    renderQuestions()
-}
-function checkCorrect(event){
-    if (quiz[currentQuestion].correctAnswer == event.target.innerHTML){
-        event.target.style.backgroundColor = "green"
-        event.target.style.color = "white"
-        score += 10
-        correctCount ++   //
-    } else{
-        event.target.style.backgroundColor = "red"
-        event.target.style.color = "white"
-        wrongCount ++  //
+    if(quiz[currentQuestion].correctAnswer == currentSelection.innerHTML){
+        score += 10;
+        correctCount ++ ;  
+    }else{
+        wrongCount ++ ;    
     }
-    scoreElement.innerHTML = score
+
+    scoreElement.innerHTML = score; 
+    if(currentQuestion === quiz.length -1){
+        showFinalResult()
+        return;    
+    }
+    currentQuestion ++;
+    renderQuestions()
+    nextQuestionButton.disabled = true;
+       
+    if(currentQuestion === quiz.length - 1){
+        nextQuestionButton.innerHTML = "Check Result";
+    }
 }
 
-function showFinalResult(){   //
+function checkCorrect(event){
+    event.target.classList.add("active")    
+    for(var i=0; i<quizOptions.children.length; i++){
+        if(event.target !== quizOptions.children[i]){
+            quizOptions.children[i].classList.remove("active")    
+        }
+    }
+
+    currentSelection = event.target
+    nextQuestionButton.disabled = false
+    scoreElement.innerHTML = score  
+}
+
+function showFinalResult(){   
     var container = document.getElementById("container")
     container.innerHTML = `
         <h2>Quiz Completed</h2>
@@ -106,8 +114,34 @@ function showFinalResult(){   //
         <p>Correct Answers: ${correctCount}</p>
         <p>Wrong Answers: ${wrongCount}</p>
         <p>Your Score: ${score} / ${quiz.length * 10}</p>
-
+        <button onclick="restartQuiz()">Restart Quiz</button>  
     `
 }
-renderQuestions()
+renderQuestions();
+
+// restarting the quiz
+function restartQuiz() {
+    currentQuestion = 0;
+    score = 0;
+    correctCount = 0;
+    wrongCount = 0;
+
+    nextQuestionButton.innerHTML = "Next";
+
+    document.getElementById("container").innerHTML = `
+        <div class="header">
+            <p id="question"></p>
+            <button onclick="goToNext()" id="next" disabled>Next</button>
+        </div>
+        <ul id="quizOption"></ul>
+        <div id="final"></div>
+        <div id="score">Score </div>
+    `;
+
+    scoreElement = document.getElementById("score");
+    quizOptions = document.getElementById("quizOption");
+    nextQuestionButton = document.getElementById("next");
+
+    renderQuestions();
+}
 

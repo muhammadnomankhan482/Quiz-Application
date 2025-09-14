@@ -1,3 +1,28 @@
+.option{
+    background: none;
+    margin: 10px 0;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3 ease-in-out;
+}
+
+.option :hover{
+    background-color: thistle;
+    transform: scale(1.05);
+}
+
+.active{
+    background-color: blue !important;
+    color: white;
+}
+
+.non-active{
+    background-color: none;
+    color: black;
+}
+/* new work */
 body {
     font-family: Arial, Helvetica, sans-serif;
     background-color: lightsalmon;
