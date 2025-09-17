@@ -1,18 +1,18 @@
 const quiz = [
     {
-        question: "What is your name ?",
-        options: ["Hassan", "Kaif", "Arham", "Muneeb"], 
-        correctAnswer: "Arham"
+        question: "Which is the odd one out?",
+        options: ["Dog", "Cat", "Tiger", "Rose"], 
+        correctAnswer: "Rose"
     },
     {
-        question: "What is your age ?",
-        options: [24, 22, 21, 20],
-        correctAnswer: 24
+        question: "If 5 pens cost $10, how much will 8 pens?",
+        options: ["$14", "$16", "$18", "$20"],
+        correctAnswer: "$16"
     },
     {
-        question: "What is your nationality ?",
-        options: ["Pakistani", "Afghani", "Indian", "Bangladeshi"],
-        correctAnswer: "Pakistani"
+        question: "Find the missing number: 3, 6, 12, 24, _ _?",
+        options: [36,48,60,72],
+        correctAnswer: 48
     },
     {
         question: "What is the capital of Pakistan?",
@@ -54,19 +54,24 @@ const quiz = [
 
 var currentQuestion = 0;
 var score = 0;
+var quizNumber 
+var quizNumberCount = 0;
 var correctCount = 0   
 var wrongCount = 0     
-var scoreElement = document.getElementById("score");
 var quizOptions = document.getElementById("quizOption");
 let currentSelection = null;
 let nextQuestionButton = document.getElementById("next");
 function renderQuestions(){
     var questionElement = document.getElementById("question");
     questionElement.innerHTML = quiz[currentQuestion].question;
+    quizNumberCount ++;
+    quizNumber = document.getElementById("score");
+    quizNumber.innerHTML = `${quizNumberCount} / ${quiz.length}`
 
     quizOptions.innerHTML = ''
     for(var i = 0; i < quiz[currentQuestion].options.length ; i++){
         quizOptions.innerHTML += `<li class = "non-active" onclick="checkCorrect(event)" style="padding-bottom: 20px">${quiz[currentQuestion].options[i]}</li>`
+        
     }  
 }
 
@@ -79,7 +84,6 @@ function goToNext(){
         wrongCount ++ ;    
     }
 
-    scoreElement.innerHTML = score; 
     if(currentQuestion === quiz.length -1){
         showFinalResult()
         return;    
@@ -103,7 +107,6 @@ function checkCorrect(event){
 
     currentSelection = event.target
     nextQuestionButton.disabled = false
-    scoreElement.innerHTML = score  
 }
 
 function showFinalResult(){   
@@ -125,6 +128,7 @@ function restartQuiz() {
     score = 0;
     correctCount = 0;
     wrongCount = 0;
+    quizNumberCount = 0;
 
     nextQuestionButton.innerHTML = "Next";
 
@@ -138,7 +142,7 @@ function restartQuiz() {
         <div id="score">Score </div>
     `;
 
-    scoreElement = document.getElementById("score");
+    quizNumber = document.getElementById("score");
     quizOptions = document.getElementById("quizOption");
     nextQuestionButton = document.getElementById("next");
 
