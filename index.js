@@ -75,13 +75,14 @@ function renderQuestions(){
     }  
 }
 
-
+var wrongSelection =[];
 function goToNext(){
     if(quiz[currentQuestion].correctAnswer == currentSelection.innerHTML){
         score += 10;
         correctCount ++ ;  
     }else{
         wrongCount ++ ;    
+        wrongSelection.push (`Question No.${currentQuestion+1}:  ${currentSelection.innerHTML}`);
     }
 
     if(currentQuestion === quiz.length -1){
@@ -111,14 +112,42 @@ function checkCorrect(event){
 
 function showFinalResult(){   
     var container = document.getElementById("container")
-    container.innerHTML = `
+    if(score >= 80){
+        container.innerHTML = `
         <h2>Quiz Completed</h2>
+        <h3 style="color: green;">Congratulations, you’ve reached the top!</h3>
         <p>Total Questions: ${quiz.length}</p>
         <p>Correct Answers: ${correctCount}</p>
         <p>Wrong Answers: ${wrongCount}</p>
         <p>Your Score: ${score} / ${quiz.length * 10}</p>
+        <h3 id="wrong-answers-heading">wrong answers</h3><br><ul id="wrong-answers-list"><li class='wrong-answer'>${wrongSelection.join("</li><li class='wrong-answer'>")}</li></ul>
+
         <button onclick="restartQuiz()">Restart Quiz</button>  
-    `
+         `
+    }else if(score >= 50){
+        container.innerHTML = `
+        <h2>Quiz Completed</h2>
+        <h3 style="color: orange;">Well done, you are improving steadily!</h3>
+        <p>Total Questions: ${quiz.length}</p>
+        <p>Correct Answers: ${correctCount}</p>
+        <p>Wrong Answers: ${wrongCount}</p>
+        <p>Your Score: ${score} / ${quiz.length * 10}</p>
+        <h3 id="wrong-answers-heading">wrong answers</h3><br><ul id="wrong-answers-list"><li class='wrong-answer'>${wrongSelection.join("</li><li class='wrong-answer'>")}</li></ul>
+        <button onclick="restartQuiz()">Restart Quiz</button>  
+         `
+    }else if(score <50){
+        container.innerHTML = `
+        <h2>Quiz Completed</h2>
+        <h3 style="color: red;">Keep practicing, practice makes perfect!</h3>
+        <p>Total Questions: ${quiz.length}</p>
+        <p>Correct Answers: ${correctCount}</p>
+        <p>Wrong Answers: ${wrongCount}</p>
+        <p>Your Score: ${score} / ${quiz.length * 10}</p>
+        <h3 id="wrong-answers-heading">wrong answers</h3><br><ul id="wrong-answers-list"><li class='wrong-answer'>${wrongSelection.join("</li><li class='wrong-answer'>")}</li></ul>
+        <button onclick="restartQuiz()">Restart Quiz</button>  
+         `
+    }
+    
 }
 renderQuestions();
 
@@ -129,7 +158,7 @@ function restartQuiz() {
     correctCount = 0;
     wrongCount = 0;
     quizNumberCount = 0;
-
+    wrongSelection = [];
     nextQuestionButton.innerHTML = "Next";
 
     document.getElementById("container").innerHTML = `
